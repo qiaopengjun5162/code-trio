@@ -1,0 +1,8 @@
+[profile.default]
+failure-output = "immediate" # 失败时立即显示输出
+success-output = "never"     # 成功时不显示输出
+default-filter = "all"       # 运行所有测试
+
+
+[profile.ci]
+junit = { path = "junit.xml" } # 生成 JUnit 报告

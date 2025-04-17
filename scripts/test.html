@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼图游戏</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            width: 300px;
+            margin-bottom: 10px;
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .steps {
+            font-size: 16px;
+        }
+
+        .mode {
+            display: flex;
+            align-items: center;
+        }
+
+        .mode-label {
+            margin-right: 10px;
+        }
+
+        .mode-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-gap: 2px;
+            background-color: #ccc;
+            padding: 2px;
+            border: 2px solid #999;
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+
+        .cell.purple {
+            background-color: purple;
+        }
+
+        .cell.green {
+            background-color: green;
+        }
+
+        .cell.yellow {
+            background-color: yellow;
+        }
+
+        .cell.orange {
+            background-color: orange;
+        }
+
+        .cell.character {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">简单拼图</div>
+        <div class="steps">步数: 0</div>
+        <div class="mode">
+            <span class="mode-label">模式: Monad</span>
+            <button class="mode-btn">Test</button>
+        </div>
+    </div>
+    <div class="grid" id="gameGrid"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('gameGrid');
+            const gridSize = 5;
+            let steps = 0;
+
+            // 初始化网格
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                grid.appendChild(cell);
+            }
+
+            // 设置初始方块和角色位置
+            const cells = document.querySelectorAll('.cell');
+            cells[1].classList.add('purple'); // 紫色方块
+            cells[4].classList.add('character'); // 角色
+            cells[4].textContent = '🧑'; // 用emoji表示角色
+            cells[8].classList.add('green'); // 绿色方块
+            cells[18].classList.add('purple'); // 另一个紫色方块
+            cells[19].classList.add('yellow'); // 黄色方块
+            cells[24].classList.add('orange'); // 橙色方块
+
+            // 监听键盘事件（移动角色）
+            document.addEventListener('keydown', (e) => {
+                let charIndex = Array.from(cells).findIndex(cell => cell.classList.contains('character'));
+                let newIndex = charIndex;
+
+                if (e.key === 'ArrowUp' && charIndex >= gridSize) {
+                    newIndex = charIndex - gridSize;
+                } else if (e.key === 'ArrowDown' && charIndex < gridSize * (gridSize - 1)) {
+                    newIndex = charIndex + gridSize;
+                } else if (e.key === 'ArrowLeft' && charIndex % gridSize !== 0) {
+                    newIndex = charIndex - 1;
+                } else if (e.key === 'ArrowRight' && (charIndex + 1) % gridSize !== 0) {
+                    newIndex = charIndex + 1;
+                }
+
+                if (newIndex !== charIndex) {
+                    cells[charIndex].classList.remove('character');
+                    cells[charIndex].textContent = ''; // 清除角色
+                    cells[newIndex].classList.add('character');
+                    cells[newIndex].textContent = '🧑'; // 移动角色
+                    steps++;
+                    document.querySelector('.steps').textContent = `步数: ${steps}`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
